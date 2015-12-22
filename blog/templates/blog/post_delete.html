@@ -7,8 +7,9 @@
         <p>{{ post.text }}</p>
 
         <form method="POST" class="post-form">{% csrf_token %}
-            <button type="submit" class="save btn btn-default">Delete</button>
-            <a class="btn btn-default" href="{% url 'post_detail' pk=post.pk %}"><span>Cancel</span></a>
+            <a class="btn btn-default" href="{% url 'post_list' %}"><span>Cancel and Go back to Overview</span></a>
+            <a class="btn btn-default" href="{% url 'post_detail' pk=post.pk %}"><span>Cancel and Go back to Post</span></a>
+            <button type="submit" class="btn btn-default">Delete this Post</button>
         </form>
     </div>
 
