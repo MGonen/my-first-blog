@@ -19,7 +19,7 @@ def post_detail(request, pk):
 def post_new(request):
     print 'request = ', request
     if request.method == "POST":
-        print 'requst.POST = ', request.POST
+        print 'request.POST = ', request.POST
 
         form = PostForm(request.POST)
         if form.is_valid():
@@ -59,3 +59,21 @@ def post_delete(request, pk):
         return redirect('post_list')
 
     return render(request, 'blog/post_delete.html', {'post':post})
+
+
+def post_unpublished_list(request):
+    first_posts = Post.objects.filter(published_date__gte=timezone.now())
+    second_posts = Post.objects.filter(published_date=None)
+    posts = []
+    for item in first_posts:
+        posts.append(item)
+    for item in second_posts:
+        posts.append(item)
+
+    return render(request, 'blog/post_unpublished_list.html', {'posts':posts})
+
+
+def post_publish(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    post.publish()
+    return redirect ('post_list')
