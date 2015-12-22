@@ -70,6 +70,7 @@ def post_unpublished_list(request):
     for item in second_posts:
         posts.append(item)
 
+
     return render(request, 'blog/post_unpublished_list.html', {'posts':posts})
 
 
