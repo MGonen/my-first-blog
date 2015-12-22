@@ -62,14 +62,33 @@ def post_delete(request, pk):
 
 
 def post_unpublished_list(request):
-    first_posts = Post.objects.filter(published_date__gte=timezone.now())
-    second_posts = Post.objects.filter(published_date=None)
-    posts = []
-    for item in first_posts:
-        posts.append(item)
-    for item in second_posts:
-        posts.append(item)
+    first_posts_query_set = Post.objects.filter(published_date__gt=timezone.now()).order_by('created_date')
+    first_posts = []
+    for item in first_posts_query_set:
+        first_posts.append(item)
 
+    second_posts_query_set = Post.objects.filter(published_date__isnull=True).order_by('created_date')
+    second_posts = []
+    for item in second_posts_query_set:
+        second_posts.append(item)
+    posts = []
+
+
+    while first_posts != [] and second_posts != []:
+        if first_posts != []:
+            if first_posts[0].created_date < second_posts[0].created_date:
+                posts.append(first_posts[0])
+                del first_posts[0]
+            else:
+                posts.append(second_posts[0])
+                del second_posts[0]
+
+    if first_posts == []:
+        for item in second_posts:
+            posts.append(item)
+    else:
+        for item in first_posts:
+            posts.append(item)
 
     return render(request, 'blog/post_unpublished_list.html', {'posts':posts})
 

@@ -7,15 +7,18 @@
         {% for post in posts %}
             <div class="post">
                 <div class="date">
+                        Created on: {{ post.created_date|date:"d-m-Y" }}<br/>
                     {% if post.published_date %}
-                        {{ post.published_date }}
+                        Will be published on: {{ post.published_date|date:"d-m-Y" }}                 {% else %}
+                        No publication date yet
                     {% endif %}
                 </div>
-                <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
-                <a class="btn btn-default" href="{% url 'post_delete' pk=post.pk %}"><span class="glyphicon glyphicon-minus"></span></a>
-                <a class="btn btn-default" href="{% url 'post_publish' pk=post.pk %}"><span class="glyphicon glyphicon-asterisk"></span></a>
-                <h1>{{ post.title }}</h1>
-                <p>{{ post.text|linebreaks }}</p>
+{#                <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>#}
+{#                <a class="btn btn-default" href="{% url 'post_delete' pk=post.pk %}"><span class="glyphicon glyphicon-minus"></span></a>#}
+{#                <a class="btn btn-default" href="{% url 'post_publish' pk=post.pk %}"><span class="glyphicon glyphicon-asterisk"></span></a>#}
+                <h1><a href="{% url "blog.views.post_detail" pk=post.pk %}">{{ post.title }}</a></h1>
+{#                <h1>{{ post.title }}</h1>#}
+                <p>{{ post.text|truncatechars:200 }}</p>
             </div>
         {% endfor %}
     {% endif %}
