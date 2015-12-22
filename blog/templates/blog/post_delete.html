@@ -1,0 +1,15 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <div class="post">
+        <p>The following post will be deleted:</p>
+        <h1>{{ post.title }}</h1>
+        <p>{{ post.text }}</p>
+
+        <form method="POST" class="post-form">{% csrf_token %}
+            <button type="submit" class="save btn btn-default">Delete</button>
+            <a class="btn btn-default" href="{% url 'post_detail' pk=post.pk %}"><span>Cancel</span></a>
+        </form>
+    </div>
+
+{% endblock %}

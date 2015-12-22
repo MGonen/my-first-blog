@@ -17,7 +17,10 @@ def post_detail(request, pk):
 
 
 def post_new(request):
+    print 'request = ', request
     if request.method == "POST":
+        print 'requst.POST = ', request.POST
+
         form = PostForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
@@ -27,6 +30,7 @@ def post_new(request):
             return redirect('post_detail', pk=post.pk)
 
     else:
+        print 'request.GET =', request.GET
         form = PostForm()
     return render(request, 'blog/post_edit.html', {'form': form})
 
@@ -47,3 +51,11 @@ def post_edit(request, pk):
 
     return render(request, 'blog/post_edit.html', {'form':form})
 
+
+def post_delete(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == "POST":
+        post.delete()
+        return redirect('post_list')
+
+    return render(request, 'blog/post_delete.html', {'post':post})
