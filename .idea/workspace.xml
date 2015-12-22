@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="dee252e9-fbfc-4688-8d68-093494412f2d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/blog/templates/blog/post_unpublished_list.html" afterPath="$PROJECT_DIR$/blog/templates/blog/post_unpublished_list.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/blog/views.py" afterPath="$PROJECT_DIR$/blog/views.py" />
     </list>
     <ignored path="djangogirls.iws" />
     <ignored path=".idea/workspace.xml" />
