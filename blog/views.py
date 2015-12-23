@@ -13,7 +13,12 @@ def post_list(request):
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    return render(request, 'blog/post_detail.html', {'post':post})
+
+    already_published = True
+    if not post.published_date or post.published_date > timezone.now():
+        already_published = False
+
+    return render(request, 'blog/post_detail.html', {'post':post, 'already_published':already_published})
 
 
 def post_new(request):
