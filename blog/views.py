@@ -3,6 +3,7 @@ from django.utils import timezone
 from .models import Post
 from .forms import PostForm
 from django.shortcuts import redirect
+import operator
 
 # Create your views here.
 
@@ -50,7 +51,6 @@ def post_edit(request, pk):
             # post.published_date = timezone.now()
             post.save()
             return redirect('post_detail', pk=post.pk)
-
     else:
         form = PostForm(instance=post)
 
@@ -67,33 +67,43 @@ def post_delete(request, pk):
 
 
 def post_unpublished_list(request):
-    first_posts_query_set = Post.objects.filter(published_date__gt=timezone.now()).order_by('created_date')
-    first_posts = []
-    for item in first_posts_query_set:
-        first_posts.append(item)
+    # first_posts_query_set = Post.objects.filter(published_date__gt=timezone.now()).order_by('created_date')
+    # first_posts = []
+    # for item in first_posts_query_set:
+    #     first_posts.append(item)
+    #
+    # second_posts_query_set = Post.objects.filter(published_date__isnull=True).order_by('created_date')
+    # second_posts = []
+    # for item in second_posts_query_set:
+    #     second_posts.append(item)
+    # posts = []
+    #
+    # while first_posts != [] and second_posts != []:
+    #     if first_posts != []:
+    #         if first_posts[0].created_date < second_posts[0].created_date:
+    #             posts.append(first_posts[0])
+    #             del first_posts[0]
+    #         else:
+    #             posts.append(second_posts[0])
+    #             del second_posts[0]
+    #
+    # if first_posts == []:
+    #     for item in second_posts:
+    #         posts.append(item)
+    # else:
+    #     for item in first_posts:
+    #         posts.append(item)
 
-    second_posts_query_set = Post.objects.filter(published_date__isnull=True).order_by('created_date')
-    second_posts = []
-    for item in second_posts_query_set:
-        second_posts.append(item)
     posts = []
+    first_posts = Post.objects.filter(published_date__gt=timezone.now())
+    second_posts = Post.objects.filter(published_date__isnull=True)
 
+    for item in first_posts:
+        posts.append(item)
+    for item in second_posts:
+        posts.append(item)
 
-    while first_posts != [] and second_posts != []:
-        if first_posts != []:
-            if first_posts[0].created_date < second_posts[0].created_date:
-                posts.append(first_posts[0])
-                del first_posts[0]
-            else:
-                posts.append(second_posts[0])
-                del second_posts[0]
-
-    if first_posts == []:
-        for item in second_posts:
-            posts.append(item)
-    else:
-        for item in first_posts:
-            posts.append(item)
+    posts = sorted(posts, key=operator.attrgetter('created_date'))
 
     return render(request, 'blog/post_unpublished_list.html', {'posts':posts})
 
