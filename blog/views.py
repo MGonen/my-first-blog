@@ -25,31 +25,39 @@ def post_detail(request, pk):
 def post_new(request):
     print 'request = ', request
     if request.method == "POST":
-        print 'request.POST = ', request.POST
+
+        if "cancel" in request.POST:
+            return redirect('post_list')
 
         form = PostForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
-            post.published_date = timezone.now()
             post.save()
+            if "publish" in request.POST:
+                return redirect('post.publish', pk=post.pk)
             return redirect('post_detail', pk=post.pk)
-
     else:
         print 'request.GET =', request.GET
         form = PostForm()
     return render(request, 'blog/post_edit.html', {'form': form})
 
 
+
 def post_edit(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if request.method == "POST":
+
+        if "cancel" in request.POST:
+            return redirect('post_detail', pk=post.pk)
+
         form = PostForm(request.POST, instance=post)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
-            # post.published_date = timezone.now()
             post.save()
+            if "publish" in request.POST:
+                return redirect('post.publish', pk=post.pk)
             return redirect('post_detail', pk=post.pk)
     else:
         form = PostForm(instance=post)
@@ -59,10 +67,13 @@ def post_edit(request, pk):
 
 def post_delete(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    if request.method == "POST":
+    if "cancel_return_to_post" in request.GET:
+        return redirect('post_detail', pk=post.pk)
+    if "cancel_return_to_list" in request.GET:
+        return redirect('post_list')
+    if "delete" in request.GET:
         post.delete()
         return redirect('post_list')
-
     return render(request, 'blog/post_delete.html', {'post':post})
 
 

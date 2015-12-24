@@ -6,10 +6,15 @@
         <h1>{{ post.title }}</h1>
         <p>{{ post.text }}</p>
 
-        <form method="POST" class="post-form">{% csrf_token %}
-            <a class="btn btn-default" href="{% url 'post_list' %}"><span>Cancel and Go back to Overview</span></a>
-            <a class="btn btn-default" href="{% url 'post_detail' pk=post.pk %}"><span>Cancel and Go back to Post</span></a>
-            <button type="submit" class="btn btn-default">Delete this Post</button>
+        <form class="post-form">{% csrf_token %}
+{#            <a class="btn btn-default" href="{% url 'post_list' %}"><span>Cancel and Go back to Overview</span></a>#}
+{#            <a class="btn btn-default" href="{% url 'post_detail' pk=post.pk %}"><span>Cancel and Go back to Post</span></a>#}
+{#            <button name="delete" type="submit" class="btn btn-default">Delete this Post</button>#}
+{#            <button name="cancel_return_to_list" type="submit" class="btn btn-default">Delete this Post</button>#}
+{#            <button name="cancel_return_to_post" type="submit" class="btn btn-default">Delete this Post</button>#}
+            <button name="delete">Delete this Post</button>
+            <button name="cancel_return_to_post">Cancel and Return to Post</button>
+            <button name="cancel_return_to_list">Cancel and Return to Main Page</button>
         </form>
     </div>
 
