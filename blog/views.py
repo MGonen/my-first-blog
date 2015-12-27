@@ -23,9 +23,7 @@ def post_detail(request, pk):
 
 
 def post_new(request):
-    print 'request = ', request
     if request.method == "POST":
-
         if "cancel" in request.POST:
             return redirect('post_list')
 
@@ -35,10 +33,9 @@ def post_new(request):
             post.author = request.user
             post.save()
             if "publish" in request.POST:
-                return redirect('post.publish', pk=post.pk)
+                return redirect('post_publish', pk=post.pk)
             return redirect('post_detail', pk=post.pk)
     else:
-        print 'request.GET =', request.GET
         form = PostForm()
     return render(request, 'blog/post_edit.html', {'form': form})
 
@@ -57,7 +54,7 @@ def post_edit(request, pk):
             post.author = request.user
             post.save()
             if "publish" in request.POST:
-                return redirect('post.publish', pk=post.pk)
+                return redirect('post_publish', pk=post.pk)
             return redirect('post_detail', pk=post.pk)
     else:
         form = PostForm(instance=post)

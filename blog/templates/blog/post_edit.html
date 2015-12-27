@@ -2,7 +2,11 @@
 
 {% block content %}
 
-    <h1>New post</h1>
+    {% if form.title != "" %}
+        <h1>Editing post</h1>
+    {% else %}
+        <h1>New post</h1>
+    {% endif %}
     <form method="POST" class="post-form">{% csrf_token %}
         {{ form.as_p }}
         <button name="cancel" class="save btn btn-default">Cancel</button>
