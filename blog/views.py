@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
-from .models import Post
-from .forms import PostForm
+from .models import Post, Comment
+from .forms import PostForm, CommentForm
 from django.shortcuts import redirect
 import operator
+from itertools import chain
 
 # Create your views here.
 
@@ -14,12 +15,13 @@ def post_list(request):
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
+    comments = Comment.objects.filter(post=pk).order_by('created_date')
 
     already_published = True
     if not post.published_date or post.published_date > timezone.now():
         already_published = False
 
-    return render(request, 'blog/post_detail.html', {'post':post, 'already_published':already_published})
+    return render(request, 'blog/post_detail.html', {'post':post, 'already_published':already_published, 'comments':comments })
 
 
 def post_new(request):
@@ -75,43 +77,11 @@ def post_delete(request, pk):
 
 
 def post_unpublished_list(request):
-    # first_posts_query_set = Post.objects.filter(published_date__gt=timezone.now()).order_by('created_date')
-    # first_posts = []
-    # for item in first_posts_query_set:
-    #     first_posts.append(item)
-    #
-    # second_posts_query_set = Post.objects.filter(published_date__isnull=True).order_by('created_date')
-    # second_posts = []
-    # for item in second_posts_query_set:
-    #     second_posts.append(item)
     # posts = []
-    #
-    # while first_posts != [] and second_posts != []:
-    #     if first_posts != []:
-    #         if first_posts[0].created_date < second_posts[0].created_date:
-    #             posts.append(first_posts[0])
-    #             del first_posts[0]
-    #         else:
-    #             posts.append(second_posts[0])
-    #             del second_posts[0]
-    #
-    # if first_posts == []:
-    #     for item in second_posts:
-    #         posts.append(item)
-    # else:
-    #     for item in first_posts:
-    #         posts.append(item)
-
-    posts = []
     first_posts = Post.objects.filter(published_date__gt=timezone.now())
     second_posts = Post.objects.filter(published_date__isnull=True)
 
-    for item in first_posts:
-        posts.append(item)
-    for item in second_posts:
-        posts.append(item)
-
-    posts = sorted(posts, key=operator.attrgetter('created_date'))
+    posts = sorted(chain(first_posts, second_posts), key=operator.attrgetter('created_date'))
 
     return render(request, 'blog/post_unpublished_list.html', {'posts':posts})
 
@@ -120,3 +90,23 @@ def post_publish(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.publish()
     return redirect ('post_list')
+
+
+def comment_new(request, pk):
+
+
+    if request.method == "POST":
+        if "cancel" in request.POST:
+            return redirect('post_detail', pk)
+
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            post = Post.objects.get(pk=pk)
+            comment.post = post
+            comment.created_date = timezone.now()
+            comment.save()
+            return redirect('post_detail', pk=pk)
+    else:
+        form = CommentForm()
+    return render(request, 'blog/comment_new.html', {'form': form})

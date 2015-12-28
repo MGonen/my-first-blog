@@ -10,12 +10,12 @@
             <div class="date">
                     Created on date: {{ post.created_date|date:"d-m-Y" }}<br/>
                 {% if post.published_date %}
-                    Publication date: {{ post.published_date|date:"d-m-Y" }}                 {% else %}
+                    Publication date: {{ post.published_date|date:"d-m-Y" }}<br/>
+{#                    Publication time: {{ post.published_date|time:'c' }}#}
+                {% else %}
                     No publication date yet
                 {% endif %}
             </div>
-
-
 
         {% endif %}
         {% if user.is_authenticated %}
@@ -27,6 +27,27 @@
         {% endif %}
         <h1>{{ post.title }}</h1>
         <p>{{ post.text|linebreaks }}</p>
+    </div>
+
+
+
+    <div>
+        <h2>Comments
+            <a class="btn btn-default" href="{% url 'comment_new' pk=post.pk %}"><span class="glyphicon glyphicon-plus"></span></a>
+        </h2>
+        <div>
+            {% for comment in comments %}
+                <div>
+                    <div style="float: left;"><b>{{ comment.author }}</b>:</div>
+                    <div class="date">
+                        {{ comment.created_date|time }} {{ comment.created_date|date:"d-m-Y" }}
+                    </div>
+
+                    <div><br/>{{ comment.text }}</div>
+                    <br/>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 
 {% endblock %}

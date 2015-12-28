@@ -15,3 +15,18 @@ class Post(models.Model):
 
     def __unicode__(self):
         return self.title
+
+
+class Comment(models.Model):
+    post = models.ForeignKey('Post')
+    text = models.TextField()
+    author = models.CharField(max_length=200)
+    created_date = models.DateTimeField(default=timezone.now)
+    parent_comment = models.ForeignKey('Comment', blank=True, null=True)
+
+    def __unicode__(self):
+        if len(self.text) < 50:
+            text = self.text
+        else:
+            text = self.text[0:50]
+        return text

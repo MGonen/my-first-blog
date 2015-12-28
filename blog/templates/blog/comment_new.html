@@ -2,11 +2,10 @@
 
 {% block content %}
 
-    <h1>New Post</h1>
-    <form method="POST" class="post-form">{% csrf_token %}
+    <h1>New Comment</h1>
+    <form method="POST" class="comment-form">{% csrf_token %}
         {{ form.as_p }}
         <button name="cancel" class="save btn btn-default">Cancel</button>
         <button name="save" class="save btn btn-default">Save</button>
-        <button name="publish" class="save btn btn-default">Publish</button>
     </form>
 {% endblock %}
