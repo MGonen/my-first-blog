@@ -2,8 +2,16 @@
 
 {% block content %}
 
-    <h1>New Post</h1>
+
     <form method="POST" class="post-form">{% csrf_token %}
+        {% if form.Meta.title == "" %}
+            <h1>New Post</h1>
+            {{ form.Meta.title }}
+        {% else %}
+            <h1>Editing Post</h1>
+            {{ form.Meta.title }}
+        {% endif %}
+
         {{ form.as_p }}
         <button name="cancel" class="save btn btn-default">Cancel</button>
         <button name="save" class="save btn btn-default">Save</button>

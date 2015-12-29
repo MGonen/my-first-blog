@@ -23,10 +23,12 @@ class Comment(models.Model):
     author = models.CharField(max_length=200)
     created_date = models.DateTimeField(default=timezone.now)
     parent_comment = models.ForeignKey('Comment', blank=True, null=True)
+    level = models.IntegerField(default=0)
+
 
     def __unicode__(self):
-        if len(self.text) < 50:
+        if len(self.text) <= 50:
             text = self.text
         else:
-            text = self.text[0:50]
+            text = self.text[:50]
         return text

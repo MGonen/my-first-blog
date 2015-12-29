@@ -9,7 +9,8 @@
                 <div class="date">
                     Created on date: {{ post.created_date|date:"d-m-Y" }}<br/>
                     {% if post.published_date %}
-                        Publication date: {{ post.published_date|date:"d-m-Y" }}                 {% else %}
+                        Publication date: {{ post.published_date|date:"d-m-Y" }}
+                    {% else %}
                         No publication date yet
                     {% endif %}
                 </div>

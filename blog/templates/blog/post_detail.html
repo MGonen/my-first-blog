@@ -21,9 +21,9 @@
         {% if user.is_authenticated %}
             <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
             <a class="btn btn-default" href="{% url 'post_delete' pk=post.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
-        {% endif %}
-        {% if not already_published %}
-            <a class="btn btn-default" href="{% url 'post_publish' pk=post.pk %}"><span class="glyphicon glyphicon-asterisk"></span></a>
+            {% if not already_published %}
+                <a class="btn btn-default" href="{% url 'post_publish' pk=post.pk %}"><span class="glyphicon glyphicon-asterisk"></span></a>
+            {% endif %}
         {% endif %}
         <h1>{{ post.title }}</h1>
         <p>{{ post.text|linebreaks }}</p>
@@ -33,19 +33,22 @@
 
     <div>
         <h2>Comments
-            <a class="btn btn-default" href="{% url 'comment_new' pk=post.pk %}"><span class="glyphicon glyphicon-plus"></span></a>
+            <a class="btn btn-default" href="{% url 'comment_new' post_pk=post.pk comment_pk=0%}"><span class="glyphicon glyphicon-plus"></span></a>
         </h2>
         <div>
             {% for comment in comments %}
-                <div>
-                    <div style="float: left;"><b>{{ comment.author }}</b>:</div>
-                    <div class="date">
-                        {{ comment.created_date|time }} {{ comment.created_date|date:"d-m-Y" }}
-                    </div>
-
-                    <div><br/>{{ comment.text }}</div>
-                    <br/>
+                <b><u>{{ comment.author }}</u></b> - Level: {{ comment.level }} -
+                <a href="{% url 'comment_delete' post_pk=post.pk comment_pk=comment.pk %}">Remove</a>
+                <div class="date">
+                    {{ comment.created_date|time }} {{ comment.created_date|date:"d-m-Y" }}
                 </div>
+
+                <p>
+                    {{ comment.text }}<br/>
+                    <a href="{% url 'comment_new' post_pk=post.pk comment_pk=comment.pk%}">[ Reply ]</a>
+                </p>
+
+                <br/>
             {% endfor %}
         </div>
     </div>
