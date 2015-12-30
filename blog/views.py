@@ -35,7 +35,6 @@ def sort_comments(unsorted_comments):
     sorted_comments = []
 
     while unsorted_comments != []:
-        print 'while loop iteration'
         original_comment = unsorted_comments[0]
         unsorted_comments, sorted_comments = recursive_sorting(unsorted_comments, sorted_comments, original_comment)
 
@@ -152,8 +151,21 @@ def comment_new(request, post_pk, comment_pk):
 
 
 def comment_delete(request, post_pk, comment_pk):
-    comment = Comment.objects.get(pk=comment_pk)
-    comment.delete()
+    comments = Comment.objects.filter(post=post_pk)
+    print_comment = Comment.objects.get(pk=comment_pk)
+    print print_comment.pk, print_comment.author, print_comment.text
+    comment_has_child = False
+    for comment in comments:
+
+        if comment.parent_comment == Comment.objects.get(pk=comment_pk):
+            comment_has_child = True
+
+    if not comment_has_child:
+        comment = Comment.objects.get(pk=comment_pk)
+        comment.delete()
+    else:
+        print 'Comment has child, so could not be deleted'
+
     return redirect('post_detail', pk=post_pk)
 
 

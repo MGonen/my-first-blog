@@ -17,6 +17,7 @@ class Post(models.Model):
         return self.title
 
 
+
 class Comment(models.Model):
     post = models.ForeignKey('Post')
     text = models.TextField()
