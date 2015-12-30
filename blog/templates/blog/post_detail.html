@@ -33,7 +33,7 @@
 
     <div>
         <h2>Comments
-{#            <a class="btn btn-default" href="{% url 'comment_new' post_pk=post.pk comment_pk=0 %}"><span class="glyphicon glyphicon-plus"></span></a>#}
+            <a class="btn btn-default" href="{% url 'comment_new' post_pk=post.pk comment_pk=0 %}"><span class="glyphicon glyphicon-plus"></span></a>
         </h2>
         <div>
             {% for comment in comments %}
