@@ -104,11 +104,11 @@ def post_edit(request, pk):
 
 def post_delete(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    if "cancel_return_to_post" in request.GET:
+    if "cancel_return_to_post" in request.POST:
         return redirect('post_detail', pk=post.pk)
-    if "cancel_return_to_list" in request.GET:
+    if "cancel_return_to_list" in request.POST:
         return redirect('post_list')
-    if "delete" in request.GET:
+    if "delete" in request.POST:
         post.delete()
         return redirect('post_list')
     return render(request, 'blog/post_delete.html', {'post':post})
