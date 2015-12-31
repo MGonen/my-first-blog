@@ -31,33 +31,24 @@ def post_detail(request, pk):
     return render(request, 'blog/post_detail.html', {'post':post, 'already_published':already_published, 'comments':comments })
 
 
+
 def sort_comments(unsorted_comments):
     sorted_comments = []
-
-    while unsorted_comments != []:
-        original_comment = unsorted_comments[0]
-        unsorted_comments, sorted_comments = recursive_sorting(unsorted_comments, sorted_comments, original_comment)
-
+    for parent_comment in unsorted_comments:
+        unsorted_comments, sorted_comments = recursive_sorting(unsorted_comments, sorted_comments, parent_comment)
     return sorted_comments
 
-def recursive_sorting(unsorted_comments, sorted_comments, org_comment):
-    unsorted_copy = unsorted_comments[:]
 
-    child_comment_found = False
-    for comment in unsorted_copy:
-        if comment.parent_comment:
-            if comment.parent_comment.id == org_comment.id:
-                child_comment_found = True
-                if org_comment not in sorted_comments:
-                    sorted_comments.append(org_comment)
-                recursive_sorting(unsorted_comments, sorted_comments, comment)
+def recursive_sorting(unsorted_comments, sorted_comments,  parent_comment):
+    if not parent_comment in sorted_comments:
+        sorted_comments.append(parent_comment)
 
-    if not child_comment_found:
-        sorted_comments.append(org_comment)
-    unsorted_comments.remove(org_comment)
+    for child_comment in unsorted_comments:
+        if child_comment.parent_comment:
+            if child_comment.parent_comment.id == parent_comment.id:
+                recursive_sorting(unsorted_comments, sorted_comments, child_comment)
+
     return unsorted_comments, sorted_comments
-
-
 
 
 
